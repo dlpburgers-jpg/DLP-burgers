@@ -1,18 +1,23 @@
-# DLP Burgers — MVP V2
+# DLP Burgers — MVP V3
 
-Demo visual y funcional de la app de pedidos y fidelización de DLP Burgers.
+Versión 3 de la demo de pedidos y fidelización de DLP Burgers.
+
+## Novedades
+- Productos con variantes (simple, doble, triple, cuádruple o las que defina administración).
+- Extras con precio.
+- Ingredientes removibles sin costo.
+- Notas del cliente por producto.
+- Productos destacados y disponibilidad.
+- Gestión de categorías desde administración.
+- Carrito con configuraciones personalizadas.
+- Mantiene pedidos, estados, puntos, cumpleaños y automatización de inactividad del MVP anterior.
 
 ## Archivos para GitHub Pages
+- index.html
+- styles.css
+- app.js
+- manifest.webmanifest
+- dlp-logo.jpeg
+- README.md
 
-- `index.html`
-- `styles.css`
-- `app.js`
-- `manifest.webmanifest`
-- `dlp-logo.jpeg`
-- `README.md`
-
-Subir todos estos archivos a la raíz del repositorio. GitHub Pages debe seguir configurado con `main` + `/(root)`.
-
-## Importante
-
-Esta versión sigue siendo un MVP local: los datos se guardan en `localStorage` del navegador. No hay backend ni sincronización entre dispositivos todavía.
+Publicar desde `main` + `/(root)`.
