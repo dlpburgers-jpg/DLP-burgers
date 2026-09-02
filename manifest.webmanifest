@@ -1,8 +1,5 @@
 {
-  "name": "DLP Burgers",
-  "short_name": "DLP Burgers",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#fff8ee",
-  "theme_color": "#d83d2b"
+ "id":"./", "name":"DLP Burgers", "short_name":"DLP Burgers", "lang":"es-AR",
+ "start_url":"./", "scope":"./", "display":"standalone", "background_color":"#f6f1ea", "theme_color":"#bd3423",
+ "icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]
 }

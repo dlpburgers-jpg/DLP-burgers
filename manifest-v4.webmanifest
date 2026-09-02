@@ -1,0 +1,9 @@
+{
+  "name": "DLP Burgers",
+  "short_name": "DLP Burgers",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff8ee",
+  "theme_color": "#d83d2b"
+}
+
