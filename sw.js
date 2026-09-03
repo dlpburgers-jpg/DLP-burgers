@@ -1,5 +1,5 @@
-const CACHE = 'dlp-v5-74f785689894';
-const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-BUhI571l.css","./assets/index-C-hxmzik.js","./assets/preview-disabled-CwRR3fzr.js"];
+const CACHE = 'dlp-v5-987733b16328';
+const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-BPch_i7e.css","./assets/index-DLRY2G9f.js","./assets/preview-disabled-CwRR3fzr.js"];
 self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES))); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('dlp-v5-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', event => {
