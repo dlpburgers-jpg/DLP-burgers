@@ -1,5 +1,6 @@
-const CACHE = 'dlp-v5-173a3e5f8055';
-const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-BVyRyN71.css","./assets/index-Cu2CUskm.js","./assets/preview-disabled-CwRR3fzr.js"];
+/* global ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-8RXW66oQ.css","./assets/index-BSTUgQsc.js","./assets/preview-disabled-CwRR3fzr.js"] */
+const CACHE = 'dlp-v5-168e3c3dbb8d';
+const FILES = __ASSETS__;
 self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES))); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('dlp-v5-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', event => {
@@ -10,4 +11,26 @@ self.addEventListener('fetch', event => {
  } else if (FILES.some(path => new URL(path, self.location.href).href === url.href)) {
   event.respondWith(caches.open(CACHE).then(cache => cache.match(event.request)).then(hit => hit || fetch(event.request)));
  }
+});
+
+// Web Push usa el mismo worker que conserva la app instalada.
+self.addEventListener('push',event=>{
+ let data={};try{data=event.data?.json()||{};}catch{/* Mostrar un aviso genérico si el mensaje no tiene JSON. */}
+ const target=['shop','account','orders'].includes(data.target)?data.target:'shop';
+ event.waitUntil(self.registration.showNotification(String(data.title||'DLP Burgers').slice(0,60),{
+  body:String(data.body||'Tenés una novedad de DLP.').slice(0,240),
+  icon:new URL('./icon-192.png',self.location.href).href,
+  tag:data.campaignId?`dlp-${data.campaignId}`:undefined,
+  data:{target}
+ }));
+});
+self.addEventListener('notificationclick',event=>{
+ event.notification.close();
+ const view=['shop','account','orders'].includes(event.notification.data?.target)?event.notification.data.target:'shop';
+ const url=new URL('./',self.location.href);url.searchParams.set('screen',view);
+ event.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(async windows=>{
+  const existing=windows.find(client=>{const u=new URL(client.url);return u.origin===url.origin&&u.pathname.startsWith(new URL('./',self.location.href).pathname);});
+  if(existing){existing.postMessage({type:'DLP_PUSH_OPEN',view});return existing.focus();}
+  return self.clients.openWindow(url.href);
+ }));
 });
