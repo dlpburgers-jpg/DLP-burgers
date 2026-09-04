@@ -1,6 +1,6 @@
 /* global __ASSETS__, __GOOGLE_REVIEW_URL__ */
-const CACHE = 'dlp-v5-5f28342485db';
-const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./dlp-circular.svg","./dlp-circular-48.png","./apple-touch-icon-circular.png","./dlp-circular-192.png","./dlp-circular-512.png","./dlp-circular-maskable-512.png","./assets/dlp-admin-logo-CKBb41bS.jpeg","./assets/dlp-burgers-banner-D8DG3Hn2.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-Bss9E4bd.js","./assets/index-EQl4uTTu.css","./assets/preview-disabled-CwRR3fzr.js"];
+const CACHE = 'dlp-v5-d71715da63ad';
+const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./dlp-circular.svg","./dlp-circular-48.png","./apple-touch-icon-circular.png","./dlp-circular-192.png","./dlp-circular-512.png","./dlp-circular-maskable-512.png","./assets/dlp-admin-logo-CKBb41bS.jpeg","./assets/dlp-burgers-banner-D8DG3Hn2.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-aMLupoxY.css","./assets/index-CPotwgit.js","./assets/preview-disabled-CwRR3fzr.js"];
 const GOOGLE_REVIEW_URL = "https://g.page/r/CZvwQlkxICVdEAE/review";
 self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES))); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('dlp-v5-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
