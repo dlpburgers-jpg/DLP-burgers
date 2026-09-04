@@ -1,6 +1,7 @@
-/* global __ASSETS__ */
-const CACHE = 'dlp-v5-d15d2f7012e4';
-const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./dlp-circular.svg","./dlp-circular-48.png","./apple-touch-icon-circular.png","./dlp-circular-192.png","./dlp-circular-512.png","./dlp-circular-maskable-512.png","./assets/dlp-admin-logo-CKBb41bS.jpeg","./assets/dlp-burgers-banner-D8DG3Hn2.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-CiHGiz0X.js","./assets/index-EQl4uTTu.css","./assets/preview-disabled-CwRR3fzr.js"];
+/* global __ASSETS__, __GOOGLE_REVIEW_URL__ */
+const CACHE = 'dlp-v5-5f28342485db';
+const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./dlp-circular.svg","./dlp-circular-48.png","./apple-touch-icon-circular.png","./dlp-circular-192.png","./dlp-circular-512.png","./dlp-circular-maskable-512.png","./assets/dlp-admin-logo-CKBb41bS.jpeg","./assets/dlp-burgers-banner-D8DG3Hn2.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-Bss9E4bd.js","./assets/index-EQl4uTTu.css","./assets/preview-disabled-CwRR3fzr.js"];
+const GOOGLE_REVIEW_URL = "https://g.page/r/CZvwQlkxICVdEAE/review";
 self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES))); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('dlp-v5-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('message',event=>{
@@ -24,11 +25,15 @@ self.addEventListener('push',event=>{
   body:String(data.body||'Tenés una novedad de DLP.').slice(0,240),
   icon:new URL('./dlp-circular-192.png',self.location.href).href,
   tag:data.campaignId?`dlp-${data.campaignId}`:undefined,
-  data:{target}
+  data:{target,...(data.reviewUrl===GOOGLE_REVIEW_URL?{reviewUrl:GOOGLE_REVIEW_URL}:{})}
  }));
 });
 self.addEventListener('notificationclick',event=>{
  event.notification.close();
+ if(event.notification.data?.reviewUrl===GOOGLE_REVIEW_URL){
+  event.waitUntil(self.clients.openWindow(GOOGLE_REVIEW_URL));
+  return;
+ }
  const view=['shop','account','orders'].includes(event.notification.data?.target)?event.notification.data.target:'shop';
  const url=new URL('./',self.location.href);url.searchParams.set('screen',view);
  event.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(async windows=>{
