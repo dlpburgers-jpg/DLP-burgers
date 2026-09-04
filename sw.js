@@ -1,6 +1,6 @@
 /* global __ASSETS__ */
-const CACHE = 'dlp-v5-c6b1e7149ba9';
-const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./assets/dlp-admin-logo-CKBb41bS.jpeg","./assets/dlp-burgers-banner-D8DG3Hn2.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-DIJWmOa_.js","./assets/index-K5X6mu__.css","./assets/preview-disabled-CwRR3fzr.js"];
+const CACHE = 'dlp-v5-910ac711671c';
+const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./dlp-circular.svg","./dlp-circular-48.png","./apple-touch-icon-circular.png","./dlp-circular-192.png","./dlp-circular-512.png","./dlp-circular-maskable-512.png","./assets/dlp-admin-logo-CKBb41bS.jpeg","./assets/dlp-burgers-banner-D8DG3Hn2.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-DCGg1DIo.js","./assets/index-K5X6mu__.css","./assets/preview-disabled-CwRR3fzr.js"];
 self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES))); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('dlp-v5-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('message',event=>{
@@ -22,7 +22,7 @@ self.addEventListener('push',event=>{
  const target=['shop','account','orders'].includes(data.target)?data.target:'shop';
  event.waitUntil(self.registration.showNotification(String(data.title||'DLP Burgers').slice(0,60),{
   body:String(data.body||'Tenés una novedad de DLP.').slice(0,240),
-  icon:new URL('./icon-192.png',self.location.href).href,
+  icon:new URL('./dlp-circular-192.png',self.location.href).href,
   tag:data.campaignId?`dlp-${data.campaignId}`:undefined,
   data:{target}
  }));
