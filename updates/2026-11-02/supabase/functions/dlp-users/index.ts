@@ -65,6 +65,14 @@ Deno.serve(async(req:Request)=>{
    const ipHash=await requestHash();
    const reserved=await db.rpc('dlp_reserve_registration',{p_request:input.requestId,p_phone:phone,p_ip_hash:ipHash});
    if(reserved.error)return reply({error:'No pudimos iniciar el registro. Esperá unos minutos o contactá a DLP.'},429);
+   function registrationCreated(){
+    const result={created:true,pending:false,requestId:input.requestId,phone};
+    // Installed v1 clients throw unless pending=true, then incorrectly demand WhatsApp.
+    // Their shared helper can display a server message. Keep the account enabled and
+    // give an actionable success notice instead of a false failure or approval request.
+    const legacyNative=['capacitor://localhost','http://localhost','https://localhost'].includes(requestOrigin)&&input.registrationVersion!==2;
+    return reply(legacyNative?{...result,code:'account_created',error:'Tu cuenta ya está creada y habilitada. Tocá "Ya tengo cuenta" e ingresá con tu celular y la contraseña que elegiste. No necesitás registrarte otra vez ni enviar un WhatsApp.'}:result);
+   }
    async function complete(userId:string){
     const target=await db.auth.admin.getUserById(userId);
     const user=target.data.user,marker=user?.app_metadata?.dlp_manual_registration;
@@ -73,7 +81,7 @@ Deno.serve(async(req:Request)=>{
      const updated=await db.auth.admin.updateUserById(userId,{email_confirm:true,app_metadata:{...user.app_metadata,dlp_manual_registration:{...marker,approved:true,method:'automatic'}}});
      if(updated.error)throw new Error('No pudimos finalizar el registro');
     }
-    return reply({created:true,pending:false,requestId:input.requestId,phone});
+    return registrationCreated();
    }
    if(reserved.data?.user_id)return await complete(reserved.data.user_id);
    const result=await db.auth.admin.createUser({email:`reg-${input.requestId}@cuentas.dlpburgers.com`,password:input.password,email_confirm:true,user_metadata:{dlp_profile:profile,dlp_privacy:{version:'2026-10-04',accepted_at:new Date().toISOString(),source:'phone_registration'}},app_metadata:{dlp_manual_registration:{request:input.requestId,phone,approved:true,method:'automatic'}}});
@@ -82,7 +90,7 @@ Deno.serve(async(req:Request)=>{
     if(!receipt.data?.user_id)return reply({error:'No pudimos registrar ese celular. Si ya tenés cuenta, ingresá o pedí ayuda a DLP.'},409);
     return await complete(receipt.data.user_id);
    }
-   return reply({created:true,pending:false,requestId:input.requestId,phone});
+   return registrationCreated();
   }
   const authorization=req.headers.get('authorization')||'';
   if(!authorization.startsWith('Bearer '))return reply({error:'Ingresá a tu cuenta'},401);

@@ -20,7 +20,7 @@ export default function PhoneRegistration({apiKey,onLogin,initialProfile=emptyPr
   if(request.current?.phone!==phone)request.current={phone,id:crypto.randomUUID()};
   try{localStorage.setItem(attemptKey,JSON.stringify(request.current));}catch{/* Retry remains available in this tab. */}
   try{
-   const result=await registrationAction({action:'register_phone',requestId:request.current.id,profile:{...profile,phone},password,privacyAccepted:accepted});
+   const result=await registrationAction({action:'register_phone',registrationVersion:2,requestId:request.current.id,profile:{...profile,phone},password,privacyAccepted:accepted});
    if(!result?.created||result.pending!==false||result.requestId!==request.current.id)throw new Error('No pudimos confirmar el registro. Reintentá.');
    const next={phone,requestId:result.requestId,name:`${profile.first_name.trim()} ${profile.last_name.trim()}`};
    setReceipt(next);setPassword('');try{localStorage.setItem(receiptKey,JSON.stringify(next));localStorage.removeItem(attemptKey);}catch{/* The visible link still works. */}
