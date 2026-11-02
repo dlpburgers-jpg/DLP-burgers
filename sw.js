@@ -1,6 +1,6 @@
 /* global __ASSETS__, __GOOGLE_REVIEW_URL__ */
-const CACHE = 'dlp-v5-8fa395f7aac2';
-const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./dlp-circular.svg","./dlp-circular-48.png","./apple-touch-icon-circular.png","./dlp-circular-192.png","./dlp-circular-512.png","./dlp-circular-maskable-512.png","./assets/dlp-admin-logo-CKBb41bS.jpeg","./assets/dlp-burgers-banner-D8DG3Hn2.png","./assets/dlp-campaign-S8xeskhn.jpeg","./assets/index-D8sHJKAm.css","./assets/index-coupon-ffb107505730.js","./assets/preview-disabled-CwRR3fzr.js","./assets/web-B3qMCdG2.js","./assets/web-CJuZSh-L.js"];
+const CACHE = 'dlp-v5-8efdfea7868e';
+const FILES = ["./index.html","./manifest.webmanifest","./favicon.svg","./icon-192.png","./icon-512.png","./dlp-circular.svg","./dlp-circular-48.png","./apple-touch-icon-circular.png","./dlp-circular-192.png","./dlp-circular-512.png","./dlp-circular-maskable-512.png","./assets/app-guest-tables-8b7048d8e6dc.js","./assets/app-TrvkmhTv.css","./assets/BrandLogo-BiGP6jCE.js","./assets/dlp-admin-logo-C93FT983.webp","./assets/dlp-burgers-banner-DeM66YSH.webp","./assets/dlp-campaign-DJF9PhSl.webp","./assets/dlp-stamp-mascot-CGmmHtWY.webp","./assets/menu-BFyh3faN.css","./assets/menu-BvF_PrzL.js","./assets/preview-disabled-CwRR3fzr.js","./assets/web-CRHRPrmL.js","./assets/web-CZQ9MO4J.js"];
 const GOOGLE_REVIEW_URL = "https://g.page/r/CZvwQlkxICVdEAE/review";
 self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES))); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('dlp-v5-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
@@ -10,6 +10,8 @@ self.addEventListener('message',event=>{
 self.addEventListener('fetch', event => {
  const url = new URL(event.request.url);
  if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;
+ // The independent QR menu must not fall back to the ordering app when offline.
+ if (url.pathname.startsWith(new URL('./menu/', self.location.href).pathname)) return;
  if (event.request.mode === 'navigate') {
   event.respondWith(fetch(event.request).catch(() => caches.open(CACHE).then(cache => cache.match('./index.html'))));
  } else if (FILES.some(path => new URL(path, self.location.href).href === url.href)) {

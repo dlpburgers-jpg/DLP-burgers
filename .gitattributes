@@ -1,0 +1,3 @@
+assets/** -text
+*.html -text
+sw.js -text
