@@ -9,6 +9,7 @@
   "assets/app-auto-accounts-bee7f1fa7bd7.js": "bee7f1fa7bd7c4ee7554e7c50aff7aedad19debef63eed10e81773a72d47993a",
   "assets/app-guest-tables-5533f381d729.js": "5533f381d7291c0d55fb557409cad76c7e0cfc421ebbbac1df27edb3f844b63e",
   "assets/app-guest-tables-8b7048d8e6dc.js": "8b7048d8e6dca3539eafca8bbfc3119734583886a8ac3905a18d0915bd0e5eef",
+  "assets/app-presence-19d7fbce0033.js": "19d7fbce00335c8112ee57c24adb3491a9815b6864656ebc137c2d384d4f41a4",
   "assets/app-table-move-13579dba1f3d.js": "13579dba1f3d73cf35b8ec7c9d00c537a6cb9d1aa0bf9929c311c958fee4eb8c",
   "assets/dlp-admin-logo-C93FT983.webp": "d4a388329d6fb8d67591971a09f4237d9724cb2da2fd14224db9c1dac882dd9d",
   "assets/dlp-burgers-banner-DeM66YSH.webp": "6b0e66448855ce767c597fe24dcdedcb9ea3e7b328913c8e2b3ad71c0bafb1cb",
@@ -33,8 +34,8 @@
   "icons.svg": "7ca2d67c9c3aebf50cdc8709ee8aacf8cdb8cc7ea6325ea94939caef5da1c53d",
   "impresion-cocina-windows.zip": "d61ac965d9e73be63ac75ff7575b3895e728d87846d925639d1f519a7a6823d5",
   "impresion-puestos-dlp-windows.zip": "32ba89b16f9fac6c5d665c173bbedbf9e63471e0fbcaa42814740561f9745993",
-  "index.html": "157f191404f24e6e727fe5304457c13e3b0cdd55d655822f916f705234ae6b18",
+  "index.html": "22fe6cb9d9b29401f08d01838ad8956c09170a1151220095de3f3ef763654a6c",
   "manifest.webmanifest": "ad911107b37dfea818ac871262711992c2d11ca810bbe4c14476eab41473a0fc",
   "menu/index.html": "9f3611fe6d3a0aba0af9612a43a330c63b4bc23df1fa2c6e5fe6ed9e8d650413",
-  "sw.js": "364f23c00b801ccff2da5d3219352c6329a7d601dd7af4b0896447f286522f79"
+  "sw.js": "f4cee50bc225aae90ebf84bb4ddc340140b62259c4bbdda5cedd9db09da5b49b"
 }
