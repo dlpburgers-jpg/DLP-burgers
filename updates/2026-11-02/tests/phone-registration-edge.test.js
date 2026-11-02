@@ -20,8 +20,8 @@ function runtime({admin=false,request=null,reserved=null,rate=true,target=null,p
  };
  const client={rpc:async()=>({data:admin}),auth:{getUser:async()=>({data:{user:{id:'actor',is_anonymous:false}}}),signInWithPassword:async data=>{logins.push(data);return passwordOK?{data:{session:{access_token:'test',refresh_token:'test'},user:{id}}}:{error:{message:'Invalid credentials'}};}}};
  runInNewContext(source,{createClient:(_url,key)=>key==='service'?db:client,normalizeCustomerPhone,Deno:{env:{get:key=>({SUPABASE_URL:'https://example.invalid',SUPABASE_ANON_KEY:'anon',SUPABASE_SERVICE_ROLE_KEY:'service'}[key])},serve:fn=>{handler=fn;}},Request,Response,TextEncoder,crypto});
- return {writes,logins,call:async(body,authorized=false)=>{
-  const result=await handler(new Request('https://example.invalid',{method:'POST',headers:{'Content-Type':'application/json',...(authorized?{Authorization:'Bearer test'}:{})},body:JSON.stringify(body)}));
+ return {writes,logins,call:async(body,authorized=false,origin='https://dlpburgers.com')=>{
+  const result=await handler(new Request('https://example.invalid',{method:'POST',headers:{'Content-Type':'application/json',Origin:origin,...(authorized?{Authorization:'Bearer test'}:{})},body:JSON.stringify(body)}));
   return {status:result.status,body:await result.json()};
  }};
 }
@@ -52,6 +52,23 @@ test('Retry cannot enable an unrelated registration',async()=>{
 });
 test('Registration refuses missing privacy acceptance without creating anything',async()=>{
  const server=runtime();assert.equal((await server.call({action:'register_phone',requestId:id,profile,password:'test-password'})).status,400);assert.equal(server.writes.length,0);
+});
+
+test('Installed legacy iOS app receives actionable success, never false failure or pending approval',async()=>{
+ const server=runtime();const result=await server.call({action:'register_phone',requestId:id,profile,password:'test-password',privacyAccepted:true},false,'capacitor://localhost');
+ assert.equal(result.status,200);assert.equal(result.body.created,true);assert.equal(result.body.pending,false);
+ assert.equal(result.body.code,'account_created');assert.match(result.body.error,/ya está creada y habilitada/);assert.match(result.body.error,/Ya tengo cuenta/);
+ assert.doesNotMatch(result.body.error,/No pudimos confirmar|Reintentá/);
+ assert.equal(server.writes[0].app_metadata.dlp_manual_registration.approved,true);
+});
+test('Updated native client gets normal success without legacy banner',async()=>{
+ const server=runtime();const result=await server.call({action:'register_phone',registrationVersion:2,requestId:id,profile,password:'test-password',privacyAccepted:true},false,'capacitor://localhost');
+ assert.equal(result.status,200);assert.equal(result.body.created,true);assert.equal(result.body.pending,false);assert.equal(result.body.error,undefined);
+});
+test('Legacy native retry returns the same success message without creating or resetting anything',async()=>{
+ const server=runtime({reserved:id,target:{id,app_metadata:{dlp_manual_registration:{request:id,phone:'+5492241699774',approved:true}}}});
+ const result=await server.call({action:'register_phone',requestId:id,profile,password:'test-password',privacyAccepted:true},false,'capacitor://localhost');
+ assert.equal(result.body.code,'account_created');assert.equal(server.writes.length,0);
 });
 test('Only administrators can approve accounts',async()=>{
  const server=runtime();assert.equal((await server.call({action:'approve_registration',requestId:id,senderVerified:true},true)).status,403);assert.equal(server.writes.length,0);
