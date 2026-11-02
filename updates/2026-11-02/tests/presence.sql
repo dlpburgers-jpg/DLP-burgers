@@ -1,0 +1,30 @@
+begin;
+do $$
+declare guest uuid:=gen_random_uuid(); other uuid:=gen_random_uuid(); a uuid:=gen_random_uuid(); b uuid:=gen_random_uuid(); uid uuid; owner_id uuid; result jsonb;
+begin
+ if has_table_privilege('anon','dlp_presence_private.sessions','select') or has_table_privilege('authenticated','dlp_presence_private.sessions','select') then raise exception 'Raw presence exposed'; end if;
+ if has_function_privilege('anon','public.dlp_online_visitors()','execute') then raise exception 'Guest can read roster'; end if;
+ perform set_config('request.jwt.claim.sub','',true);
+ perform public.dlp_presence_ping(guest,'web',true);
+ begin perform public.dlp_online_visitors();raise exception 'Guest roster allowed';exception when insufficient_privilege then null;end;
+ select id into uid from public.profiles where role='customer' limit 1;
+ select id into owner_id from public.profiles where role='admin' and v5_admin_approved and v69_admin_level='total' limit 1;
+ if uid is null or owner_id is null then raise exception 'Missing identities for isolated validation'; end if;
+ perform set_config('request.jwt.claim.sub',uid::text,true);
+ begin perform public.dlp_presence_ping(guest,'ios',true);raise exception 'Other session overwritten';exception when insufficient_privilege then null;end;
+ begin perform public.dlp_online_visitors();raise exception 'Customer roster allowed';exception when insufficient_privilege then null;end;
+ perform public.dlp_presence_ping(a,'ios',true);perform public.dlp_presence_ping(b,'android',true);
+ if not exists(select 1 from dlp_presence_private.sessions where session_id=a and user_id=uid) then raise exception 'Wrong identity';end if;
+ perform set_config('request.jwt.claim.sub',owner_id::text,true);
+ result:=public.dlp_online_visitors();
+ if (select count(*) from jsonb_array_elements(result->'visitors') x where x->>'id'=uid::text)<>1 then raise exception 'Account not deduplicated';end if;
+ if not exists(select 1 from jsonb_array_elements(result->'visitors') x where x->>'id'=uid::text and (x->>'connections')::integer>=2) then raise exception 'Missing devices';end if;
+ update dlp_presence_private.sessions set last_seen=now()-interval '3 minutes' where session_id=guest;
+ result:=public.dlp_online_visitors();
+ if exists(select 1 from jsonb_array_elements(result->'visitors') x where x->>'id'=guest::text) then raise exception 'Stale guest shown';end if;
+ perform set_config('request.jwt.claim.sub',uid::text,true);perform public.dlp_presence_ping(a,'ios',false);
+ if exists(select 1 from dlp_presence_private.sessions where session_id=a) then raise exception 'Hidden connection retained';end if;
+ begin perform public.dlp_presence_ping(other,'invalid',true);raise exception 'Invalid platform allowed';exception when invalid_parameter_value then null;end;
+end $$;
+rollback;
+select 'Presence ownership, guest/customer denial, deduplication, expiry and leave passed; rolled back' as validation;

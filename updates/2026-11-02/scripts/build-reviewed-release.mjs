@@ -9,6 +9,6 @@ const html=readFileSync(join(root,'index.html'),'utf8');
 const sw=readFileSync(join(root,'sw.js'),'utf8');
 if(html.includes('__CF$cv$params')||html.includes('__activation_fixture'))throw Error('Unexpected injected or test code');
 for(const p of JSON.parse(sw.match(/const FILES = (\[[^;]+\]);/)[1]))if(!existsSync(join(root,p)))throw Error('Missing worker resource '+p);
-if(!html.includes('app-auto-accounts-bee7f1fa7bd7.js'))throw Error('Wrong release entrypoint');
+if(!html.includes('app-presence-19d7fbce0033.js'))throw Error('Wrong release entrypoint');
 cpSync(root,resolve('dist'),{recursive:true});
 console.log('Verified '+Object.keys(manifest).length+' release resources; prepared dist.');

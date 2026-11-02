@@ -19,7 +19,7 @@ export const navGroups = [
   {id: 'catalog', label: 'Catálogo', Icon: Utensils, keys: ['product', 'category', 'extra', 'group', 'prices', 'weeklyBurger']},
   {id: 'sales', label: 'Ventas y finanzas', Icon: ChartNoAxesCombined, keys: ['finance', 'reports', 'billing']},
   {id: 'marketing', label: 'Marketing', Icon: Gift, keys: ['coupon', 'promotions', 'events', 'notifications', 'birthdays', 'raffle']},
-  {id: 'people', label: 'Clientes y equipo', Icon: UserRound, keys: ['users','activation']},
+  {id: 'people', label: 'Clientes y equipo', Icon: UserRound, keys: ['users','activation','online']},
   {id: 'settings', label: 'Configuración', Icon: SettingsIcon, keys: ['schedule', 'payment', 'zone', 'printer', 'settings']},
 ];
 
