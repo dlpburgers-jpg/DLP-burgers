@@ -1,0 +1,14 @@
+import {readFileSync,writeFileSync,readdirSync,cpSync,existsSync} from 'node:fs';
+import {resolve,join} from 'node:path';
+import {createHash} from 'node:crypto';
+const root=resolve('release-static');
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const manifest=JSON.parse(readFileSync('docs/release-static-sha256.json','utf8'));
+for(const [p,h] of Object.entries(manifest))if(sha(readFileSync(join(root,p)))!==h)throw Error('Release resource changed: '+p);
+const html=readFileSync(join(root,'index.html'),'utf8');
+const sw=readFileSync(join(root,'sw.js'),'utf8');
+if(html.includes('__CF$cv$params')||html.includes('__activation_fixture'))throw Error('Unexpected injected or test code');
+for(const p of JSON.parse(sw.match(/const FILES = (\[[^;]+\]);/)[1]))if(!existsSync(join(root,p)))throw Error('Missing worker resource '+p);
+if(!html.includes('app-auto-accounts-bee7f1fa7bd7.js'))throw Error('Wrong release entrypoint');
+cpSync(root,resolve('dist'),{recursive:true});
+console.log('Verified '+Object.keys(manifest).length+' release resources; prepared dist.');
