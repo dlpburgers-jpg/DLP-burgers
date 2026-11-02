@@ -1,0 +1,21 @@
+import {readFileSync,writeFileSync,readdirSync} from 'node:fs';
+import {join} from 'node:path';
+import {createHash} from 'node:crypto';
+const hash=s=>createHash('sha256').update(s).digest('hex');
+const root='release-static',old='assets/app-guest-tables-5533f381d729.js';
+let app=readFileSync(join(root,old),'utf8');
+if(!hash(app).startsWith('5533f381d729'))throw Error('Unexpected base bundle');
+function change(a,b){if(app.split(a).length!==2)throw Error('Anchor changed: '+a);app=app.replace(a,b);}
+change('children:`Verificá los datos. Podés volver y corregirlos.`}),','children:`Verificá los datos. Podés volver y corregirlos.`}),!We&&(0,q.jsx)(`p`,{className:`notice`,role:`alert`,children:`Podés finalizar tu pedido sin registrarte, pero esta compra no sumará puntos DLP.`}),');
+const asset='assets/app-guest-tables-'+hash(app).slice(0,12)+'.js';
+let html=readFileSync(join(root,'index.html'),'utf8'),sw=readFileSync(join(root,'sw.js'),'utf8');
+if(html.split(old).length!==2||sw.split(old).length!==2)throw Error('Entrypoint changed');
+html=html.replace(old,asset);sw=sw.replace(old,asset).replace(/const CACHE = 'dlp-v5-[a-f0-9]+';/,"const CACHE = 'dlp-v5-"+hash(app+html+sw).slice(0,12)+"';");
+writeFileSync(join(root,asset),app);writeFileSync(join(root,'index.html'),html);writeFileSync(join(root,'sw.js'),sw);
+let source=readFileSync('src/AppV5.jsx','utf8');
+source=source.replace('<p className="checkout-step-intro">Verificá los datos. Podés volver y corregirlos.</p>','<p className="checkout-step-intro">Verificá los datos. Podés volver y corregirlos.</p>{!canCheckout&&<p className="notice" role="alert">Podés finalizar tu pedido sin registrarte, pero esta compra no sumará puntos DLP.</p>}');
+writeFileSync('src/AppV5.jsx',source);
+const walk=(d,p='')=>readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(d,e.name),p+e.name+'/'):[p+e.name]);
+writeFileSync('docs/release-static-sha256.json',JSON.stringify(Object.fromEntries(walk(root).sort().map(p=>[p,hash(readFileSync(join(root,p)))])),null,2)+'\n');
+writeFileSync('scripts/build-reviewed-release.mjs',readFileSync('scripts/build-reviewed-release.mjs','utf8').replace(old.split('/')[1],asset.split('/')[1]));
+console.log(JSON.stringify({asset,sha256:hash(app)}));
