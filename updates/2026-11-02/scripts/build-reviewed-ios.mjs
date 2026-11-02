@@ -5,7 +5,7 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {parse} from 'acorn';
 let html=readFileSync('dist/index.html','utf8');
-const old=html.match(/src="\.\/(assets\/app-(?:auto-accounts|presence|password)-[^"]+)"/)?.[1];
+const old=html.match(/src="\.\/(assets\/app-(?:auto-accounts|presence|password|stamps)-[^"]+)"/)?.[1];
 if(!old)throw Error('Review the current release before preparing iOS');
 let code=readFileSync('dist/'+old,'utf8');
 const anchor='action: "register_phone",';
