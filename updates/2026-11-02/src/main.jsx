@@ -11,6 +11,7 @@ import "./customer.css";
 import "./red-theme.css";
 import "./checkout-soft.css";
 import "./header-refined.css";
+import "./components/PopularMosaic.css";
 import {registerAppWorker} from './lib/pwa';
 import {initializeNativePush} from './lib/push';
 import MobileUpdateGate from './components/MobileUpdateGate';

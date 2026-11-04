@@ -1,0 +1,170 @@
+/* Top 6: the existing chooser remains the only action in each product tile. */
+@media screen {
+  .app-shell.customer-view .popular-products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    counter-reset: dlp-popular;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 16px;
+    counter-increment: dlp-popular;
+    transform: none;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-media {
+    flex: none;
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 1.55;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-photo,
+  .app-shell.customer-view .popular-products-grid .product-photo-fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-photo {
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-photo-fallback .brand-logo {
+    width: 75%;
+    max-width: 130px;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-body h3 {
+    display: block;
+    min-height: 2.46em;
+    margin: 0;
+    font-size: .8125rem;
+    line-height: 1.23;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    -webkit-line-clamp: unset;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-excerpt {
+    display: none;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 0;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-footer strong {
+    min-width: 0;
+    font-size: .8125rem;
+    line-height: 1.3;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-add {
+    position: static;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    min-height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  /* Stretch the existing button's hit area; retain its label and keyboard action. */
+  .app-shell.customer-view .popular-products-grid .product-add:not(:disabled)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-card:focus-within {
+    outline: 2px solid #ffcf68;
+    outline-offset: 2px;
+  }
+
+  .app-shell.customer-view .popular-products-grid .popular-badge {
+    display: grid;
+    place-items: center;
+    top: 8px;
+    left: 8px;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    font-size: 0;
+    line-height: 1;
+    background: #ffc328;
+    color: #501308 !important;
+  }
+
+  .app-shell.customer-view .popular-products-grid .popular-badge::before {
+    content: counter(dlp-popular);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .app-shell.customer-view .popular-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-body h3 {
+    font-size: .75rem;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .app-shell.customer-view .popular-products-grid {
+    gap: 8px;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-body {
+    padding: 8px;
+    gap: 7px;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-body h3,
+  .app-shell.customer-view .popular-products-grid .product-footer strong {
+    font-size: .6875rem;
+  }
+
+  .app-shell.customer-view .popular-products-grid .product-add {
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+    min-height: 30px;
+  }
+}
