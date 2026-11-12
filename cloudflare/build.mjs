@@ -38,4 +38,10 @@ writeFileSync(join(out, '_headers'), [
   '/menu/*', '  Cache-Control: public, max-age=0, must-revalidate',
   '/assets/*', '  Cache-Control: public, max-age=31536000, immutable',
   ''].join('\n'));
+// Direcciones inexistentes: 404 real (como ChatGPT Sites), en lugar de devolver la app con 200.
+writeFileSync(join(out, '404.html'), '<!doctype html><html lang="es-AR"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1"><title>No encontrado · DLP Burgers</title></head><body style="font-family:system-ui,sans-serif;text-align:center;padding:3rem 1rem"><h1>Página no encontrada</h1><p><a href="/">Ir a DLP Burgers</a></p></body></html>\n');
+
+// El service worker precarga ./index.html: se sirve sin la redirección automática a "/".
+writeFileSync(join(out, '_redirects'), ['/index.html / 200', '/menu/index.html /menu/ 200', ''].join('\n'));
+
 console.log(`Listo: ${Object.keys(manifest).length} archivos verificados en dist/ (entrada ${entry}).`);
