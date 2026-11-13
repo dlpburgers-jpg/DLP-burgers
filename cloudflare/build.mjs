@@ -25,6 +25,13 @@ for (const [path, expected] of Object.entries(manifest)) {
 }
 if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
 
+// SEGURO DE PRUEBAS: esta rama apunta a la base de pruebas (jpajoiijbeypselvqmza).
+// Si alguna vez se uniera a main, la publicación de producción se cancela.
+if (readFileSync(join(out, 'assets/BrandLogo-BiGP6jCE.js'), 'utf8').includes('jpajoiijbeypselvqmza') && (process.env.CF_PAGES_BRANCH || 'main') !== 'pruebas-no-unir') {
+  console.error('Esta versión apunta a la base de PRUEBAS: solo se publica en la rama pruebas-no-unir.');
+  process.exit(1);
+}
+
 // El HTML debe apuntar al punto de entrada que está en el manifiesto.
 const html = readFileSync(join(out, 'index.html'), 'utf8');
 const entry = html.match(/<script[^>]+src="\.\/([^"]+\.js)"/)?.[1];
