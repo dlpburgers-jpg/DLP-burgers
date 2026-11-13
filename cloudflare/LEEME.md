@@ -15,4 +15,4 @@ no se publica nada.
 2. Actualizar `deploy-manifest.json` con los SHA-256 nuevos (y la entrada de `index.html`).
 3. Revisar la vista previa de la rama en `*.dlp-burgers.pages.dev` antes de pasar a `main`.
 
-Hasta que se mueva el DNS, dlpburgers.com sigue servido por ChatGPT Sites.
+El DNS ya está en Cloudflare (12/11/2026). dlpburgers.com sigue servido por ChatGPT Sites hasta que se agregue como dominio personalizado de este proyecto.
